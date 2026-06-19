@@ -361,7 +361,7 @@ with col_settings:
     # ── Camera adjustments ──
     st.markdown("""
     <div class="settings-title">
-      <span class="settings-title-icon">🎛️</span> Chỉnh thông số ảnh
+      <span class="settings-title-icon"></span> Chỉnh thông số ảnh
     </div>""", unsafe_allow_html=True)
 
     cam_col1, cam_col2 = st.columns(2)
