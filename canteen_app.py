@@ -11,7 +11,7 @@ try:
 except ImportError:
     TF_AVAILABLE = False
 
-CNN_MODEL_PATH  = "food_cnn.h5"     # đúng tên file model trong repo
+CNN_MODEL_PATH  = "food_cnn.h5"   
 CLASS_NAMES_TXT = "class_names.txt"
 IMG_SIZE        = 128
 
@@ -55,7 +55,6 @@ DISPLAY_NAMES = {
     "không rõ":             "Không rõ",
 }
 
-# Default compartment regions (x, y, w, h) as ratio of image size
 DEFAULT_COMPARTMENTS = {
     "Top-Left":      (0.03, 0.03, 0.44, 0.48),
     "Top-Right":     (0.53, 0.03, 0.44, 0.48),
@@ -124,7 +123,7 @@ def predict_dish(model, crop, class_names):
 def fmt(n): return f"{n:,}₫".replace(",", ".")
 
 # ═══════════════════════════════════════════════════════
-st.set_page_config(page_title="Canteen Auto-Billing", page_icon="🍱", layout="wide")
+st.set_page_config(page_title="Canteen Auto-Billing", layout="wide")
 
 st.markdown("""
 <style>
@@ -329,11 +328,10 @@ CLASS_NAMES = load_class_names(CLASS_NAMES_TXT)
 cnn_model   = load_cnn()
 demo = (cnn_model is None)
 
-# ── Init session state for compartments ──
 if "compartments" not in st.session_state:
     st.session_state.compartments = dict(DEFAULT_COMPARTMENTS)
 
-# ── Sticky navbar ──
+
 demo_tag = '<span class="navbar-demo">Demo</span>' if demo else ""
 st.markdown(f"""
 <div class="navbar">
@@ -345,8 +343,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # ════════════════════════════════════════════════════════
-# Layout: left input panel | right settings panel
-# ════════════════════════════════════════════════════════
+
 col_in, col_settings = st.columns([1, 1], gap="large")
 
 with col_in:
@@ -369,11 +366,11 @@ with col_settings:
 
     cam_col1, cam_col2 = st.columns(2)
     with cam_col1:
-        brightness = st.slider("☀️ Độ sáng", 0.5, 2.0, 1.0, 0.05, key="brightness")
-        contrast   = st.slider("◑ Tương phản", 0.5, 2.0, 1.0, 0.05, key="contrast")
+        brightness = st.slider(" Độ sáng", 0.5, 2.0, 1.0, 0.05, key="brightness")
+        contrast   = st.slider(" Tương phản", 0.5, 2.0, 1.0, 0.05, key="contrast")
     with cam_col2:
-        saturation = st.slider("🎨 Màu sắc", 0.0, 2.0, 1.0, 0.05, key="saturation")
-        sharpness  = st.slider("🔍 Độ sắc nét", 0.0, 2.0, 1.0, 0.05, key="sharpness")
+        saturation = st.slider(" Màu sắc", 0.0, 2.0, 1.0, 0.05, key="saturation")
+        sharpness  = st.slider(" Độ sắc nét", 0.0, 2.0, 1.0, 0.05, key="sharpness")
 
     if st.button("↺ Reset về mặc định", key="reset_cam"):
         st.session_state.brightness = 1.0
@@ -393,7 +390,7 @@ if tray_image_raw:
         st.session_state.get("sharpness",  1.0),
     )
 
-# ── Crop editor ──
+
 st.markdown("""
 <div class="divider-label">
   <div class="divider-line"></div>
@@ -424,7 +421,7 @@ with crop_col_sliders:
     new_w = st.slider("↔ Chiều rộng",              0.05, 0.95, float(cur[2]), 0.01, key=f"cw_{active_slot}")
     new_h = st.slider("↕ Chiều cao",               0.05, 0.95, float(cur[3]), 0.01, key=f"ch_{active_slot}")
 
-    # Update compartment on slider change
+
     st.session_state.compartments[active_slot] = (new_x, new_y, new_w, new_h)
 
     bcol1, bcol2 = st.columns(2)
@@ -448,7 +445,7 @@ with crop_col_img:
         overlay_img = draw_compartment_overlays(img_np_preview, st.session_state.compartments, active_slot)
         st.image(overlay_img, caption="Xem trước vùng cắt (ô đỏ = đang chỉnh)", use_container_width=True)
 
-        # Show current crop preview
+        
         cur_region = st.session_state.compartments[active_slot]
         crop_preview = crop_compartment(img_np_preview, cur_region)
         if crop_preview.size > 0:
@@ -457,20 +454,18 @@ with crop_col_img:
         st.markdown("""
         <div style="margin-top:8px;padding:40px 20px;background:#FDFCF8;border:1px dashed #DDD9D0;
           border-radius:12px;text-align:center;">
-          <div style="font-size:32px;margin-bottom:10px">🖼️</div>
+          <div style="font-size:32px;margin-bottom:10px"></div>
           <div style="font-size:14px;font-weight:600;color:#3A3832;margin-bottom:6px;">Tải ảnh lên để xem trước vùng cắt</div>
           <div style="font-size:13px;color:#9A9690;">Các ô sẽ hiển thị trên ảnh sau khi tải</div>
         </div>""", unsafe_allow_html=True)
 
-# ── Analyze button ──
+
 st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 btn_col, _ = st.columns([1, 2])
 with btn_col:
-    go = st.button("🍱 Nhận diện & tính tiền", disabled=(tray_image is None))
+    go = st.button(" Nhận diện & tính tiền", disabled=(tray_image is None))
 
-# ═══════════════════════════════════════════════════════
 # Results
-# ═══════════════════════════════════════════════════════
 if go and tray_image:
     img_np = np.array(tray_image)
     cnn_results = {}
