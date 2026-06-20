@@ -31,7 +31,7 @@ PRICE_MAP = {
     "rau xào đậu que":       10_000,
     "rau xào đậu đũa":       10_000,
     "trứng chiên":           25_000,
-    "trứng chiên thịt":      30_000,
+    "trứng chiên thịt":      25_000,
     "không rõ":                   0,
 }
 
