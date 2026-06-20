@@ -358,7 +358,7 @@ with col_in:
         if cam: tray_image_raw = Image.open(cam).convert("RGB")
 
 with col_settings:
-    # ── Camera adjustments ──
+    # Điều chỉnh camera
     st.markdown("""
     <div class="settings-title">
       <span class="settings-title-icon"></span> Chỉnh thông số ảnh
@@ -379,7 +379,7 @@ with col_settings:
         st.session_state.sharpness  = 1.0
         st.rerun()
 
-# ── Apply camera adjustments ──
+# Điều chỉnh camera
 tray_image = None
 if tray_image_raw:
     tray_image = apply_camera_adjustments(
@@ -465,7 +465,7 @@ btn_col, _ = st.columns([1, 2])
 with btn_col:
     go = st.button(" Nhận diện & tính tiền", disabled=(tray_image is None))
 
-# Results
+# Kết quả
 if go and tray_image:
     img_np = np.array(tray_image)
     cnn_results = {}
